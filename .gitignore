@@ -1,0 +1,8 @@
+node_modules
+dist
+.vite
+.wrangler
+*.tsbuildinfo
+package-lock.json
+.env
+.env.local

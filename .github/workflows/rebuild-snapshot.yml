@@ -1,0 +1,26 @@
+name: Rebuild Daytona Snapshot
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.VIBESTACK_AGENT_APP_ID }}
+          private-key: ${{ secrets.VIBESTACK_AGENT_PRIVATE_KEY }}
+          owner: VibeStackCodes
+
+      - name: Trigger snapshot rebuild
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          repository: VibeStackCodes/vibestack-snapshot
+          event-type: template-updated
+          client-payload: '{"sha": "${{ github.sha }}", "ref": "${{ github.ref }}"}'
